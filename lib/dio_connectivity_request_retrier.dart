@@ -27,7 +27,7 @@ class DioConnectivityRequestRetrier {
           log(requestOptions.path);
           responseCompleter.complete(
             dio.request(
-              requestOptions.baseUrl + requestOptions.path,
+              requestOptions.path,
               cancelToken: requestOptions.cancelToken,
               data: requestOptions.data,
               onReceiveProgress: requestOptions.onReceiveProgress,

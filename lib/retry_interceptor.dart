@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -14,15 +15,15 @@ class RetryOnConnectionChangeInterceptor extends Interceptor {
 
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     log('REQUEST[${options.method}] => BASEURL: ${options.baseUrl} => ENDPOINT: ${options.path}');
     return super.onRequest(options, handler);
   }
 
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
+  void onResponse(Response response, ResponseInterceptorHandler handler) async {
     log(
-      'RESPONSE[${response.statusCode}] => BASEURL: ${response.requestOptions.baseUrl} => ENDPOINT: ${response.requestOptions.path}',
+      'RESPONSE[${response.statusCode}] => BASEURL: ${response.requestOptions.baseUrl} => ENDPOINT: ${response.requestOptions.path} => DATA: $response',
     );
     return super.onResponse(response, handler);
   }
@@ -38,12 +39,10 @@ class RetryOnConnectionChangeInterceptor extends Interceptor {
         return e;
       }
     }
-    return err;
+    return super.onError(err, handler);
   }
 
   bool _shouldRetry(DioError err) {
-
-
     return err.type == DioErrorType.other &&
         err.error != null &&
         err.error is SocketException;

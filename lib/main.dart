@@ -42,10 +42,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Obx(
-              () => controller.sellCollections.isEmpty
+              () => controller.collectionDataLoading.value
+                      ? const CircularProgressIndicator() :  controller.sellCollections.isEmpty
                   ? const Text("No data")
-                  : controller.collectionDataLoading.value
-                      ? const CircularProgressIndicator()
                       : Text("${controller.sellCollections.first.title}"),
             ),
             ElevatedButton(

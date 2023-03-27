@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_interceptors/dio_connectivity_request_retrier.dart';
 import 'package:dio_interceptors/retry_interceptor.dart';
+import 'package:get/get.dart';
 
 Network network = Network();
 
@@ -33,6 +34,13 @@ class Network {
       //debugPrint('isFormData: ' + isFormData.toString());
       options.headers[HttpHeaders.contentTypeHeader] = 'multipart/form-data';
     }
+
+    Dio dio = Dio(options);
+
+    return dio..interceptors.add(RetryOnConnectionChangeInterceptor(
+        requestRetrier: DioConnectivityRequestRetrier(
+            dio: dio, connectivity: Connectivity())
+    ));
 
     return Dio(options)
       ..interceptors.add(RetryOnConnectionChangeInterceptor(requestRetrier: DioConnectivityRequestRetrier(dio: Dio(options), connectivity: Connectivity())));
